@@ -26,7 +26,6 @@ def system(command, **kwargs) -> str:
 
 
 # 这里手动修改下自己项目所使用的Python全局环境或虚拟环境、pip路径以及包路径
-
 SITE_PACKAGES_PATH = os.path.join(r'D:\PythonProjects\pyautoguis\Lib\site-packages')
 PIP_PATH = os.path.join(r'D:\PythonProjects\pyautoguis\Scripts\pip.exe')
 VIRTUAL_ENV = os.path.join(r'D:\PythonProjects\pyautoguis\Scripts\activate.bat')
