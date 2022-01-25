@@ -1,2 +1,2 @@
 # git-hooks
-git hooks with Python and shell
+git hooks with Python and Shell
