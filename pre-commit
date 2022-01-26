@@ -1,0 +1,18 @@
+#!/bin/sh
+# author: syz
+
+# python的虚拟路径和项目路径
+INSTALL_PYTHON='D:\pythonprojects\pyautoguis\scripts\python.exe'
+PROJECT_PATH="D:\PythonProjects\Project\Python36\Lib\e_rpa"
+USER_NAME=$(git config user.name)
+
+# 进入虚拟环境
+SCRIPTS_PATH=$(cd `dirname ${INSTALL_PYTHON}`; pwd)
+VIRTUAL_PATH="${SCRIPTS_PATH}/activate"
+source $VIRTUAL_PATH
+
+echo "${USER_NAME}, hello:"
+
+# 执行
+cd $PROJECT_PATH
+$INSTALL_PYTHON "${PROJECT_PATH}\git_hook\format_check.py"

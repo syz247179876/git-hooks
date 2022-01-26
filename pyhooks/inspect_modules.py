@@ -1,7 +1,6 @@
 """
 模块增量检查钩子
 author: syz
-date: 2022/1/24
 """
 
 import hashlib
@@ -25,7 +24,7 @@ def system(command, **kwargs) -> str:
     return out.decode()
 
 
-# 这里手动修改下自己项目所使用的Python全局环境或虚拟环境、pip路径以及包路径
+# 这里手动修改下自己项目所使用的Python全局环境或虚拟环境以及pip路径, 还有包路径
 SITE_PACKAGES_PATH = os.path.join(r'D:\PythonProjects\pyautoguis\Lib\site-packages')
 PIP_PATH = os.path.join(r'D:\PythonProjects\pyautoguis\Scripts\pip.exe')
 VIRTUAL_ENV = os.path.join(r'D:\PythonProjects\pyautoguis\Scripts\activate.bat')
@@ -102,6 +101,8 @@ except ImportError:
     block = os.popen(f'{PIP_PATH} install pipdeptree')
     block.readlines()
 
+# if not os.path.exists(PACKAGE_DIR):
+#     os.mkdir(PACKAGE_DIR)
 if not os.path.exists(os.path.join(PACKAGE_DIR, USER_NAME)):
     os.makedirs(USER_DIR)
 
@@ -124,8 +125,7 @@ def validate_and_generate(module_map: t.Dict) -> str:
     """
     构造映射, 检测发生变化的模块
     """
-    if not os.path.exists(REQUIREMENTS_PATH):
-        raise FileNotFoundError('请先导出依赖包到项目根目录下的requirements.txt')
+
     with open(REQUIREMENTS_PATH, 'r', encoding='utf-8') as f:
         modules = f.readlines()
         m = hashlib.md5()

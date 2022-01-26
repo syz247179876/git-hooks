@@ -1,7 +1,6 @@
 """
 校验代码风格钩子
 author: syz
-date: 2022/1/24
 """
 
 from __future__ import with_statement, print_function
@@ -20,6 +19,9 @@ ignore_codes = ["E121", "E122", "E123", "E124", "E125", "E126", "E127", "E128",
                 "E129", "E131", "E501"]
 # 额外检测配置
 overrides = ["--max-line-length=120"]
+
+# 指明项目目录, 手动修改项目的目录
+PROJECT_PATH = r"D:\PythonProjects\Project\Python36\Lib\e_rpa"
 
 
 def system(command, **kwargs):
@@ -55,16 +57,20 @@ def main():
     elif ignore_codes:
         args.append(f'--ignore={",".join(ignore_codes)}')
     args.extend(overrides)
-    args.append('.')
+    # args.append('.')
+    args.append(' '.join([rf'{PROJECT_PATH}\{file}' for file in files]))
     command = ' '.join(args)
-    print(command)
-    output: str = system(command, cwd=tempdir)
+    output = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8")
+    output.wait(2)
     shutil.rmtree(tempdir)
-    if output:
-        print('代码风格不符合PEP8, 请检查他们。或使用命令 "git commit --no-verify" 跳过检测.')
-        print('不规范代码如下：')
-        print(output.decode())
+    if output.poll() != 0:
+        # print('代码风格不符合PEP8, 请检查他们。或使用命令 "git commit --no-verify" 跳过检测.')
+        print('The code style does not comply with pep8, please check them. Or use the command "git commit --no'
+              'verify" to skip detection')
+        # print('不规范如下：')
+        print(output.communicate()[0])
         sys.exit(1)
+    sys.exit(0)
 
 
 if __name__ == '__main__':
