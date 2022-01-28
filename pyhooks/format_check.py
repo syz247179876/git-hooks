@@ -1,6 +1,6 @@
 """
 校验代码风格钩子
-author: syz
+上线环境中请去除该钩子文件和对应的pre-commit脚本!
 """
 
 from __future__ import with_statement, print_function
@@ -24,7 +24,7 @@ overrides = ["--max-line-length=120"]
 PROJECT_PATH = r"D:\PythonProjects\Project\Python36\Lib\e_rpa"
 
 
-def system(command, **kwargs):
+def system(command: str, **kwargs):
     """
     创建子进程执行command, 通过PIPE与子进程通信
     """
@@ -34,20 +34,11 @@ def system(command, **kwargs):
     return out
 
 
-def main():
+def check_format() -> bool:
     modified = re.compile(r'^\s*[AM]+\s+(?P<name>.*\.py$)', re.MULTILINE)
     files = system('git status --porcelain').decode()
     files = modified.findall(files)
 
-    tempdir = tempfile.mkdtemp()
-    for name in files:
-        filename = os.path.join(tempdir, name)
-        filepath = os.path.dirname(filename)
-
-        if not os.path.exists(filepath):
-            os.makedirs(filepath)
-        with open(filename, 'w') as f:
-            system(f'git show :{name}', stdout=f)
     args = ['pycodestyle']
     if select_codes and ignore_codes:
         print('Error: select and ignore codes are mutually exclusive')
@@ -62,15 +53,22 @@ def main():
     command = ' '.join(args)
     output = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8")
     output.wait(2)
-    shutil.rmtree(tempdir)
     if output.poll() != 0:
         # print('代码风格不符合PEP8, 请检查他们。或使用命令 "git commit --no-verify" 跳过检测.')
-        print('The code style does not comply with pep8, please check them. Or use the command "git commit --no'
+        print('The code style does not comply with pep8, please check them. Or use the command "git commit --no-'
               'verify" to skip detection')
         # print('不规范如下：')
         print(output.communicate()[0])
+        return False
+    return True
+
+
+def main():
+    check_state = check_format()
+    if check_state:
+        sys.exit(0)
+    else:
         sys.exit(1)
-    sys.exit(0)
 
 
 if __name__ == '__main__':
