@@ -52,17 +52,20 @@ def compress_zip(
     包含压文件+文件夹
     """
     aim_path = os.path.join(aim_path, f'{package_name}.zip')
+
     with zipfile.ZipFile(aim_path, 'w', zipfile.ZIP_DEFLATED) as f:
         if cypher:
             f.setpassword(cypher)
         for dir_ in source_path:
+            last_name = dir_.split('\\')[-1]
             if os.path.isfile(dir_):
-                f.write(dir_, compress_type=zipfile.ZIP_STORED)
+                f.write(dir_, last_name, compress_type=zipfile.ZIP_DEFLATED)
             else:
                 for root, dirs, files in os.walk(dir_):
                     for file in files:
-                        abs_path = os.path.join(os.path.join(root, file))
-                        f.write(abs_path, compress_type=zipfile.ZIP_STORED)
+                        abs_path = os.path.join(root, file)
+                        arc_path = rf'\{last_name}{abs_path.replace(dir_, "")}'
+                        f.write(abs_path, arc_path, compress_type=zipfile.ZIP_DEFLATED)
         f.close()
     if not reserve:
         for dir_ in source_path:
