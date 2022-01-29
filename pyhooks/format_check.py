@@ -1,6 +1,8 @@
 """
 校验代码风格钩子
-上线环境中请去除该钩子文件和对应的pre-commit脚本!
+author: syz
+使用指南：
+https://hexo-syz247179876.vercel.app/2022/01/24/Python%E9%A1%B9%E7%9B%AE%E4%BD%BF%E7%94%A8git%E9%92%A9%E5%AD%90%E7%9A%84%E6%8C%87%E5%8D%97/
 """
 
 from __future__ import with_statement, print_function
